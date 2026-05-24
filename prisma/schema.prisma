@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model WispFile {
+  id   String @id @default(cuid())
+  /// Short URL-safe identifier used in download links  
+  slug String @unique
+
+  userId String
+
+  /// Original filename provided by the uploader
+  originalName  String
+  /// File size in bytes
+  size          BigInt
+  mimeType      String
+  /// S3 object key (path inside bucket)
+  s3Key         String
+  status        FileStatus @default(PENDING)
+  /// When this file should be considered expired and cleaned up
+  expiresAt     DateTime
+  downloadCount Int        @default(0)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([userId])
+  @@index([slug])
+  @@index([expiresAt])
+}
+
+enum FileStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+}

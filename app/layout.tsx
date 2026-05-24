@@ -1,26 +1,45 @@
-import { Geist, Geist_Mono, DM_Sans, Nunito_Sans } from "next/font/google"
+import { Philosopher, Alegreya_Sans, Alegreya } from "next/font/google"
 
 import "./globals.css"
-import {
-  ClerkProvider,
-  Show,
-  SignInButton,
-  SignUpButton,
-  UserButton,
-} from "@clerk/nextjs"
+import { ClerkProvider } from "@clerk/nextjs"
 import { cn } from "@/lib/utils"
+import { Metadata } from "next"
 
-const nunitoSansHeading = Nunito_Sans({
+const philosopher = Philosopher({
   subsets: ["latin"],
+  weight: ["400", "700"], // Explicit weights for headings/logos
   variable: "--font-heading",
 })
 
-const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" })
-
-const fontMono = Geist_Mono({
+const alegreyaSans = Alegreya_Sans({
   subsets: ["latin"],
-  variable: "--font-mono",
+  weight: ["300", "400", "500", "700"], // Explicit weights for UI elements
+  variable: "--font-sans",
 })
+
+const alegreya = Alegreya({
+  subsets: ["latin"],
+  variable: "--font-serif", // Alegreya is a variable font, no weights needed
+})
+
+export const metadata: Metadata = {
+  title: {
+    default: "Wisp — Ephemeral File Transfer",
+    template: "%s — Wisp",
+  },
+  description:
+    "Send files across devices like a whisper. Upload once, share instantly, gone when the moment passes.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL ??
+      process.env.NEXTAUTH_URL ??
+      "http://localhost:3000"
+  ),
+  openGraph: {
+    title: "Wisp",
+    description: "Ephemeral file transfer, carried on the wind.",
+    type: "website",
+  },
+}
 
 export default function RootLayout({
   children,
@@ -33,29 +52,14 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(
         "antialiased",
-        fontMono.variable,
-        "font-sans",
-        dmSans.variable,
-        nunitoSansHeading.variable
+        philosopher.variable,
+        alegreyaSans.variable,
+        alegreya.variable,
+        "font-serif" // Sets Alegreya as the default body font
       )}
     >
       <body>
-        <ClerkProvider>
-          <header className="flex h-16 items-center justify-end gap-4 p-4">
-            <Show when="signed-out">
-              <SignInButton />
-              <SignUpButton>
-                <button className="h-10 cursor-pointer rounded-full bg-[#6c47ff] px-4 text-sm font-medium text-white sm:h-12 sm:px-5 sm:text-base">
-                  Sign Up
-                </button>
-              </SignUpButton>
-            </Show>
-            <Show when="signed-in">
-              <UserButton />
-            </Show>
-          </header>
-          {children}
-        </ClerkProvider>
+        <ClerkProvider>{children}</ClerkProvider>
       </body>
     </html>
   )
