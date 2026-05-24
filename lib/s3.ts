@@ -73,7 +73,6 @@ export function buildS3Key(
   filename: string
 ): string {
   // Sanitize filename: keep extension, strip unsafe chars
-  const ext = filename.split(".").pop() ?? ""
   const safe = filename.replace(/[^a-zA-Z0-9.\-_]/g, "_").slice(0, 100)
   return `uploads/${userId}/${slug}/${safe}`
 }

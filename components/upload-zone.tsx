@@ -148,10 +148,6 @@ export function UploadZone({ onUploadComplete }: Props) {
     multiple: false,
     disabled:
       uploadState.status === "uploading" || uploadState.status === "confirming",
-    maxSize:
-      parseInt(process.env.NEXT_PUBLIC_MAX_FILE_SIZE_MB ?? "500", 10) *
-      1024 *
-      1024,
   })
 
   const isIdle = uploadState.status === "idle" || uploadState.status === "error"

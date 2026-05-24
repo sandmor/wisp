@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server"
 import { prisma } from "@/lib/db"
 import { normalizeMimeType } from "@/lib/mime"
 import { buildS3Key, createPresignedUploadUrl } from "@/lib/s3"
+import { getCurrentUserAdminState } from "@/lib/admin"
 import { buildDownloadUrl, randomSlug } from "@/lib/utils"
 
 /**
@@ -46,7 +47,7 @@ export async function GET() {
  * Creates a DB record and returns a presigned PUT URL for direct-to-S3 upload.
  */
 export async function POST(req: NextRequest) {
-  const { userId } = await auth()
+  const { userId, isAdmin } = await getCurrentUserAdminState()
 
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -76,15 +77,17 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const maxBytes =
-    parseInt(process.env.MAX_FILE_SIZE_MB ?? "500", 10) * 1024 * 1024
-  if (size > maxBytes) {
-    return NextResponse.json(
-      {
-        error: `File exceeds maximum size of ${process.env.MAX_FILE_SIZE_MB ?? 500} MB`,
-      },
-      { status: 413 }
-    )
+  if (!isAdmin) {
+    const maxBytes =
+      parseInt(process.env.MAX_FILE_SIZE_MB ?? "500", 10) * 1024 * 1024
+    if (size > maxBytes) {
+      return NextResponse.json(
+        {
+          error: `File exceeds maximum size of ${process.env.MAX_FILE_SIZE_MB ?? 500} MB`,
+        },
+        { status: 413 }
+      )
+    }
   }
 
   const allowedTTLs = (process.env.TTL_OPTIONS_HOURS ?? "1,6,24,72,168")
