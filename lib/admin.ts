@@ -50,6 +50,29 @@ export function isAdminUser(user: ClerkUserLike | null | undefined) {
   return getUserEmails(user).includes(adminEmail)
 }
 
+export function getUserDisplayName(user: ClerkUserLike | null | undefined) {
+  if (!user) return "Unknown user"
+
+  const fullName = user.fullName?.trim()
+  if (fullName) return fullName
+
+  const fallbackName = [user.firstName, user.lastName]
+    .filter(Boolean)
+    .join(" ")
+    .trim()
+  if (fallbackName) return fallbackName
+
+  if (user.username) return user.username
+
+  return getUserPrimaryEmail(user) ?? user.id ?? "Unknown user"
+}
+
+export function getUserPrimaryEmail(user: ClerkUserLike | null | undefined) {
+  return (
+    user?.primaryEmailAddress?.emailAddress ?? getUserEmails(user)[0] ?? null
+  )
+}
+
 export async function getCurrentUserAdminState() {
   const { userId } = await auth()
 

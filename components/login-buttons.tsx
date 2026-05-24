@@ -18,9 +18,7 @@ export function LoginButtons() {
     try {
       await signIn.sso({
         strategy: provider,
-        // Where to send them while Clerk processes the OAuth tokens
         redirectCallbackUrl: "/sso-callback",
-        // Where to send them when they are fully logged in
         redirectUrl: "/dashboard",
       })
     } catch (err) {
