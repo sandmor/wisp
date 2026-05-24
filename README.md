@@ -181,20 +181,6 @@ curl -X POST https://your-wisp.com/api/cleanup \
 
 ---
 
-## Tech Stack
-
-| Layer        | Technology                          |
-| ------------ | ----------------------------------- |
-| Framework    | Next.js 14 (App Router)             |
-| Auth         | NextAuth.js v4                      |
-| Database ORM | Prisma                              |
-| Database     | PostgreSQL                          |
-| Storage      | S3-compatible (R2, AWS, MinIO)      |
-| UI           | shadcn/ui + Tailwind CSS            |
-| Fonts        | Cinzel + Crimson Pro (Google Fonts) |
-
----
-
 ## License
 
 MIT
