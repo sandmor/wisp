@@ -6,7 +6,7 @@ Wisp is a self-hostable file transfer service built with Next.js, Clerk, Prisma,
 
 ## Features
 
-- Sign in with Google or GitHub through Clerk SSO
+- Sign in with Google through Clerk SSO
 - Upload directly to S3-compatible storage with presigned PUT URLs
 - Pick from fixed TTL options for each upload
 - Share a public download page and QR code for every file
@@ -102,7 +102,7 @@ Open http://localhost:3000.
 
 ## Authentication Setup
 
-Wisp uses Clerk for authentication. Create a Clerk application, enable Google and/or GitHub SSO in the Clerk dashboard, then copy the publishable and secret keys into your environment file.
+Wisp uses Clerk for authentication. Create a Clerk application, enable Google SSO in the Clerk dashboard, then copy the publishable and secret keys into your environment file.
 
 The login flow redirects through `/sso-callback`, so that route must remain available in the app.
 
